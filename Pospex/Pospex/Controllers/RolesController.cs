@@ -12,10 +12,12 @@ namespace Pospex.Controllers
     {
         RoleManager<IdentityRole> _roleManager;
         UserManager<User> _userManager;
-        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        SignInManager<User> _signInManager;
+        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
         public IActionResult Index() => View(_roleManager.Roles.ToList());
 
@@ -94,6 +96,8 @@ namespace Pospex.Controllers
                 await _userManager.AddToRolesAsync(user, addedRoles);
 
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
+
+                await _signInManager.RefreshSignInAsync(user);
 
                 return RedirectToAction("UserList");
             }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Pospex.Controllers
 {
-    [Authorize(Roles = "admin")]
+   // [Authorize(Roles = "admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

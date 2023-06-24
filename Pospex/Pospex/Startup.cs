@@ -29,7 +29,8 @@ namespace Pospex
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationContext>();
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
         }

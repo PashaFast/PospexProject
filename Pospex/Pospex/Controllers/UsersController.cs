@@ -11,6 +11,7 @@ namespace Pospex.Controllers
     {
         UserManager<User> _userManager;
 
+       
         public UsersController(UserManager<User> userManager)
         {
             _userManager = userManager;

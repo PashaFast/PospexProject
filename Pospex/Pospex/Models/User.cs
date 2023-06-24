@@ -4,6 +4,6 @@ namespace Pospex.Models
 {
     public class User : IdentityUser
     {
-        public byte[] ProfilePicture { get; set; }
+        //public byte[] ProfilePicture { get; set; }
     }
 }

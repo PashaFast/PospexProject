@@ -30,12 +30,11 @@ namespace Pospex.Controllers
                 // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, model.Password);
 
-                await _userManager.AddToRoleAsync(user, "user");
-
                 await _signInManager.RefreshSignInAsync(user);
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Users");
@@ -79,7 +78,7 @@ namespace Pospex.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    ModelState.AddModelError("", "That email and password combination is incorrect.");
                 }
             }
             return View(model);

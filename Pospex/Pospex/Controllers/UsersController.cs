@@ -137,6 +137,7 @@ namespace Pospex.Controllers
                     var userRoles = await _userManager.GetRolesAsync(currentUser);
                     ViewBag.UserRoles = userRoles;
                     ViewBag.Message = "Error: Can not delete current user!";
+                    ViewBag.CurrentUser = currentUser;
 
                     var allUsers = _userManager.Users.ToList();
 
@@ -154,6 +155,7 @@ namespace Pospex.Controllers
                 var userRoles = await _userManager.GetRolesAsync(currentUser);
                 ViewBag.UserRoles = userRoles;
                 ViewBag.Message = "Error: User is not found!";
+                ViewBag.CurrentUser = currentUser;
 
                 var allUsers = _userManager.Users.ToList();
 

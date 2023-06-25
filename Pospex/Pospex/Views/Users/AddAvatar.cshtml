@@ -8,10 +8,8 @@
 
     </script>
 }
-
+<h2 class="mt-3 mb-5">Upload new avatar</h2>
 <form method="post" asp-action="AddAvatar" asp-controller="Users" enctype="multipart/form-data">
-    <label asp-for="Avatar">Загрузить новую аватарку:</label>
-
-    <input type="file" asp-for="Avatar" id="projectImage" name="files" multiple class="form-control">
-    <button>Отправить</button>
+    <input type="file" asp-for="Avatar" id="projectImage" name="files" accept="image/*"><br />
+    <button class="btn btn-success mt-4">Upload</button>
 </form>

@@ -1,24 +1,24 @@
 ﻿@model Pospex.ViewModels.LoginViewModel
 
-<h2>Вход в приложение</h2>
+<h2 class="mt-3 mb-3">Sign in</h2>
 <form method="post" asp-controller="Account" asp-action="Login"
-      asp-route-returnUrl="@Model.ReturnUrl">
+      asp-route-returnUrl="@Model.ReturnUrl" style="width: 350px">
     <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        <label asp-for="Email"></label><br />
-        <input asp-for="Email" />
+    <div class="mb-2">
+        <label asp-for="Email" class="mb-0">Email</label><br />
+        <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email"></span>
     </div>
-    <div>
-        <label asp-for="Password"></label><br />
-        <input asp-for="Password" />
+    <div class ="mb-2">
+        <label asp-for="Password" class="mb-0">Password</label><br />
+        <input asp-for="Password" class="form-control" />
         <span asp-validation-for="Password"></span>
     </div>
-    <div>
-        <label asp-for="RememberMe"></label><br />
+    <div class="mb-2 d-flex">
+        <label asp-for="RememberMe" class="mb-0 mr-2">Remember Me?</label><br />
         <input asp-for="RememberMe" />
     </div>
     <div>
-        <input type="submit" value="Войти" />
+        <input type="submit" value="Sign in" class="btn btn-success mt-2" />
     </div>
 </form>

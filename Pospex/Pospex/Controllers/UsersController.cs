@@ -186,19 +186,19 @@ namespace Pospex.Controllers
                     var files = HttpContext.Request.Form.Files;
                     if (files.Count > 0)
                     {
-                        byte[] p1 = null;
-                        using (var fs1 = files[0].OpenReadStream())
+                        byte[] avatar = null;
+                        using (var fileStream = files[0].OpenReadStream())
                         {
-                            using (var ms1 = new MemoryStream())
+                            using (var memoryStream = new MemoryStream())
                             {
-                                fs1.CopyTo(ms1);
-                                p1 = ms1.ToArray();
+                                fileStream.CopyTo(memoryStream);
+                                avatar = memoryStream.ToArray();
 
                             }
 
                         }
 
-                        user.Avatar = p1;
+                        user.Avatar = avatar;
                     }
                     else
                     {

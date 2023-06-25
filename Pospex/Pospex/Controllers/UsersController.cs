@@ -40,6 +40,11 @@ namespace Pospex.Controllers
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 user.Role = rolesList[0];
             }
+
+            if (TempData["ErrorMessage"] != null)
+            {
+                ViewBag.Message = TempData["ErrorMessage"].ToString();
+            }
             return View(users);
         }
 
@@ -89,37 +94,16 @@ namespace Pospex.Controllers
                 }
                 else
                 {
-                    var userRoles = await _userManager.GetRolesAsync(currentUser);
-                    ViewBag.UserRoles = userRoles;
-                    ViewBag.Message = "Error: Can not delete current user!";
-                    ViewBag.CurrentUser = currentUser;
-
-                    var allUsers = _userManager.Users.ToList();
-
-                    foreach (var existingUser in allUsers)
-                    {
-                        var rolesList = await _userManager.GetRolesAsync(existingUser).ConfigureAwait(false);
-                        existingUser.Role = rolesList[0];
-                    }
-                    return View("Index", allUsers);
+                    TempData["ErrorMessage"] = "Error: Can not delete current user!";
+                    return RedirectToAction("Index");
                 }
 
             }
             else
             {
-                var userRoles = await _userManager.GetRolesAsync(currentUser);
-                ViewBag.UserRoles = userRoles;
-                ViewBag.Message = "Error: User is not found!";
-                ViewBag.CurrentUser = currentUser;
+                TempData["ErrorMessage"] = "Error: User is not found!";
+                return RedirectToAction("Index");
 
-                var allUsers = _userManager.Users.ToList();
-
-                foreach (var existingUser in allUsers)
-                {
-                    var rolesList = await _userManager.GetRolesAsync(existingUser).ConfigureAwait(false);
-                    existingUser.Role = rolesList[0];
-                }
-                return View("Index", allUsers);
             }
         }
 
@@ -150,7 +134,6 @@ namespace Pospex.Controllers
                                 avatar = memoryStream.ToArray();
 
                             }
-
                         }
 
                         user.Avatar = avatar;

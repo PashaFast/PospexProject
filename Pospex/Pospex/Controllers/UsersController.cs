@@ -5,6 +5,7 @@ using Pospex.Models;
 using Pospex.ViewModels;
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -32,6 +33,7 @@ namespace Pospex.Controllers
                 var userRoles = await _userManager.GetRolesAsync(currentUser);
 
                 ViewBag.UserRoles = userRoles;
+                ViewBag.CurrentUser = currentUser;
 
             }
             var users = _userManager.Users.ToList();
@@ -162,6 +164,60 @@ namespace Pospex.Controllers
                 }
                 return View("Index", allUsers);
             }
+        }
+
+
+        [Authorize]
+        public IActionResult AddAvatar() => View();
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddAvatar(AddAvatarViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
+                if (user != null)
+                {
+
+                    var files = HttpContext.Request.Form.Files;
+                    if (files.Count > 0)
+                    {
+                        byte[] p1 = null;
+                        using (var fs1 = files[0].OpenReadStream())
+                        {
+                            using (var ms1 = new MemoryStream())
+                            {
+                                fs1.CopyTo(ms1);
+                                p1 = ms1.ToArray();
+
+                            }
+
+                        }
+
+                        user.Avatar = p1;
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Error: No file selected!";
+                        return View(model);
+                    }
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+            }
+            return View(model);
         }
     }
 }

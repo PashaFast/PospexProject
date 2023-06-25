@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pospex.Models;
 using Pospex.ViewModels;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pospex.Controllers
 {
+ // [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         RoleManager<IdentityRole> _roleManager;
@@ -79,7 +82,8 @@ namespace Pospex.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
-        {
+        {    //TODO здесь проверить что лист не пустой и не нал 
+            // + на фронте сделать так чтоб нельзя было НЕ выбрать ни одну галочку
             // получаем пользователя
             User user = await _userManager.FindByIdAsync(userId);
             if (user != null)

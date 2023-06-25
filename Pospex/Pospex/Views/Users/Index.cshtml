@@ -1,31 +1,66 @@
 ﻿@model IEnumerable<Pospex.Models.User>
 @{
     ViewBag.Title = "Список пользователей";
+
 }
 
-<a asp-action="Create">Добавить пользователя</a>
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+       
+            alert("@ViewBag.Message");
+       
+    </script>
+}
 
-<table class="table">
-    <tr><th>Email</th><th></th></tr>
-    @foreach (var user in Model)
+@if (User.Identity.IsAuthenticated)
+{
+    <p>@User.Identity.Name</p>
+    <p>Роли пользователя</p>
+    @foreach (var role in @ViewBag.UserRoles)
     {
-        <tr>
-            <td>@user.Email</td>
-            @if (User.IsInRole("admin"))
-            {
-                <td>
-                    <form asp-action="Delete" asp-route-id="@user.Id" method="post">
-                        <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@user.Id">Изменить</a>
-                        <button type="submit" class="btn btn-sm btn-danger">
-                            Удалить
-                        </button>
-                    </form>
-                </td>
-            }
-            else
-            {
-                <td></td>   
-            }
-        </tr>
+       <p>@role</p> 
     }
-</table>
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Выход" />
+    </form>
+
+    @if (User.IsInRole("admin"))
+    {
+        <a asp-action="Create">Добавить пользователя</a>
+    }
+
+    <table class="table">
+        <tr><th>Email</th><th></th></tr>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                @if (User.IsInRole("admin"))
+                {
+                    <td>
+                        <form asp-action="Delete" asp-route-id="@user.Id" method="post">
+                            <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@user.Id">Изменить</a>
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Удалить
+                            </button>
+                        </form>
+
+                        <div>Роли пользователя</div>
+                        <a asp-controller="Roles" asp-action="Edit" asp-route-userid="@user.Id">Изменить роль пользователя</a>
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login">Вход</a>
+    <a asp-controller="Account" asp-action="Register">Регистрация</a>
+}
+

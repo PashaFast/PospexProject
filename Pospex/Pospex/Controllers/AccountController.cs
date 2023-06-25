@@ -29,11 +29,16 @@ namespace Pospex.Controllers
                 User user = new User { Email = model.Email, UserName = model.Email };
                 // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, model.Password);
+
+                await _userManager.AddToRoleAsync(user, "user");
+
+                await _signInManager.RefreshSignInAsync(user);
+
                 if (result.Succeeded)
                 {
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Users");
                 }
                 else
                 {
@@ -69,7 +74,7 @@ namespace Pospex.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Users");
                     }
                 }
                 else
@@ -86,7 +91,7 @@ namespace Pospex.Controllers
         {
             // удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Users");
         }
     }
 }

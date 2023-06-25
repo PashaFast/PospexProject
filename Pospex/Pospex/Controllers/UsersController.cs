@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pospex.Models;
 using Pospex.ViewModels;
-using System;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Pospex.Controllers
 {
@@ -74,48 +71,6 @@ namespace Pospex.Controllers
             }
             return View(model);
         }
-
-        //[Authorize(Roles = "admin")]
-        //public async Task<IActionResult> Edit(string id)
-        //{
-        //    User user = await _userManager.FindByIdAsync(id);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email };
-        //    return View(model);
-        //}
-
-        //[Authorize(Roles = "admin")]
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(EditUserViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        User user = await _userManager.FindByIdAsync(model.Id);
-
-        //        if (user != null)
-        //        {
-        //            user.Email = model.Email;
-        //            user.UserName = model.Email;
-
-        //            var result = await _userManager.UpdateAsync(user);
-        //            if (result.Succeeded)
-        //            {
-        //                return RedirectToAction("Index");
-        //            }
-        //            else
-        //            {
-        //                foreach (var error in result.Errors)
-        //                {
-        //                    ModelState.AddModelError(string.Empty, error.Description);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return View(model);
-        //}
 
         [Authorize(Roles = "admin")]
         [HttpPost]

@@ -32,24 +32,34 @@ namespace Pospex.Controllers
                 var userRoles = await _userManager.GetRolesAsync(currentUser);
 
                 ViewBag.UserRoles = userRoles;
+
             }
-            return View(_userManager.Users.ToList());
+            var users = _userManager.Users.ToList();
+
+            foreach (var user in users)
+            {
+                var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+                user.Role = rolesList[0];
+            }
+            return View(users);
         }
 
 
         [Authorize]
         public IActionResult Create() => View();
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
                 User user = new User { Email = model.Email, UserName = model.Email };
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     return RedirectToAction("Index");
                 }
                 else
@@ -63,46 +73,47 @@ namespace Pospex.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email };
-            return View(model);
-        }
+        //[Authorize(Roles = "admin")]
+        //public async Task<IActionResult> Edit(string id)
+        //{
+        //    User user = await _userManager.FindByIdAsync(id);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email };
+        //    return View(model);
+        //}
 
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public async Task<IActionResult> Edit(EditUserViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                User user = await _userManager.FindByIdAsync(model.Id);
-                if (user != null)
-                {
-                    user.Email = model.Email;
-                    user.UserName = model.Email;
+        //[Authorize(Roles = "admin")]
+        //[HttpPost]
+        //public async Task<IActionResult> Edit(EditUserViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        User user = await _userManager.FindByIdAsync(model.Id);
 
-                    var result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
-                }
-            }
-            return View(model);
-        }
+        //        if (user != null)
+        //        {
+        //            user.Email = model.Email;
+        //            user.UserName = model.Email;
+
+        //            var result = await _userManager.UpdateAsync(user);
+        //            if (result.Succeeded)
+        //            {
+        //                return RedirectToAction("Index");
+        //            }
+        //            else
+        //            {
+        //                foreach (var error in result.Errors)
+        //                {
+        //                    ModelState.AddModelError(string.Empty, error.Description);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return View(model);
+        //}
 
         [Authorize(Roles = "admin")]
         [HttpPost]
@@ -124,7 +135,15 @@ namespace Pospex.Controllers
                     var userRoles = await _userManager.GetRolesAsync(currentUser);
                     ViewBag.UserRoles = userRoles;
                     ViewBag.Message = "Error: Can not delete current user!";
-                    return View("Index", _userManager.Users.ToList());
+
+                    var allUsers = _userManager.Users.ToList();
+
+                    foreach (var existingUser in allUsers)
+                    {
+                        var rolesList = await _userManager.GetRolesAsync(existingUser).ConfigureAwait(false);
+                        existingUser.Role = rolesList[0];
+                    }
+                    return View("Index", allUsers);
                 }
 
             }
@@ -133,7 +152,15 @@ namespace Pospex.Controllers
                 var userRoles = await _userManager.GetRolesAsync(currentUser);
                 ViewBag.UserRoles = userRoles;
                 ViewBag.Message = "Error: User is not found!";
-                return View("Index", _userManager.Users.ToList());
+
+                var allUsers = _userManager.Users.ToList();
+
+                foreach (var existingUser in allUsers)
+                {
+                    var rolesList = await _userManager.GetRolesAsync(existingUser).ConfigureAwait(false);
+                    existingUser.Role = rolesList[0];
+                }
+                return View("Index", allUsers);
             }
         }
     }

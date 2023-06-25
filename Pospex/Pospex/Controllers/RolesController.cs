@@ -82,10 +82,11 @@ namespace Pospex.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
-        {    //TODO здесь проверить что лист не пустой и не нал 
-            // + на фронте сделать так чтоб нельзя было НЕ выбрать ни одну галочку
-            // получаем пользователя
+        {   
             User user = await _userManager.FindByIdAsync(userId);
+
+            User currentUser = await _userManager.FindByEmailAsync(User.Identity.Name);
+
             if (user != null)
             {
                 // получем список ролей пользователя
@@ -101,9 +102,12 @@ namespace Pospex.Controllers
 
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
 
-                await _signInManager.RefreshSignInAsync(user);
+                if (user == currentUser)
+                {
+                    await _signInManager.RefreshSignInAsync(user);
+                }
 
-                return RedirectToAction("UserList");
+                return RedirectToAction("Index", "Users");
             }
 
             return NotFound();

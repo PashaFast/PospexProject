@@ -5,7 +5,7 @@ namespace Pospex.ViewModels
 {
     public class AddAvatarViewModel
     {
-        public byte[] Avatar { get; set; } = null;
+        public byte[] Avatar { get; set; } 
     }
 
 }

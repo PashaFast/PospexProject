@@ -75,7 +75,7 @@ namespace Pospex.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "That email and password combination is incorrect.");
+                    ModelState.AddModelError("", "That username and password combination is incorrect.");
                 }
             }
             return View(model);

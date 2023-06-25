@@ -11,10 +11,10 @@ namespace Pospex
     {
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            string adminEmail = "admin-mail@yandex.ru";
+            string adminName = "admin";
             string adminPassword = "Admin-1111";
 
-            string userEmail = "user-mail@yandex.ru";
+            string userName = "user";
             string userPassword = "User-1111";
 
             if (await roleManager.FindByNameAsync("admin") == null)
@@ -26,9 +26,9 @@ namespace Pospex
                 await roleManager.CreateAsync(new IdentityRole("user"));
             }
 
-            if (await userManager.FindByNameAsync(adminEmail) == null)
+            if (await userManager.FindByNameAsync(adminName) == null)
             {
-                User admin = new User { Email = adminEmail, UserName = adminEmail, Avatar = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "./wwwroot/img/adminImg.jpg")) };
+                User admin = new User { Email = adminName, UserName = adminName, Avatar = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "./wwwroot/img/adminImg.jpg")) };
                 IdentityResult result = await userManager.CreateAsync(admin, adminPassword);
                 if (result.Succeeded)
                 {
@@ -36,9 +36,9 @@ namespace Pospex
                 }
             }
 
-            if (await userManager.FindByNameAsync(userEmail) == null)
+            if (await userManager.FindByNameAsync(userName) == null)
             {
-                User user = new User { Email = userEmail, UserName = userEmail, Avatar = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "./wwwroot/img/userImg.jpg")) };
+                User user = new User { Email = userName, UserName = userName, Avatar = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "./wwwroot/img/userImg.jpg")) };
                 IdentityResult result = await userManager.CreateAsync(user, userPassword);
                 if (result.Succeeded)
                 {
